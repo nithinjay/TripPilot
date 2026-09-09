@@ -2,10 +2,13 @@ import { TravelAdviceRequest, TravelAdvice } from '../types/travel';
 import { TravelAdvisorAgent } from '../agents/travelAgent';
 
 export class TravelService {
-    private agent = new TravelAdvisorAgent();
+    private agent: TravelAdvisorAgent | null = null;
 
-    constructor() {
-        this.agent = new TravelAdvisorAgent();
+    private getAgent(): TravelAdvisorAgent {
+        if (!this.agent) {
+            this.agent = new TravelAdvisorAgent();
+        }
+        return this.agent;
     }
 
     async getTravelAdvice(request: TravelAdviceRequest): Promise<TravelAdvice> {
@@ -13,10 +16,10 @@ export class TravelService {
         // and allows for easy testing and mocking of Agent behavior.
 
         try {
-            return await this.agent.planTrip(request);
+            return await this.getAgent().planTrip(request);
         } catch (error) {
             console.error('[Service] Error planning trip:', error);
-            throw new Error('Failed to plan trip. Please try again later.');
+            throw error;
         }
     }
 }

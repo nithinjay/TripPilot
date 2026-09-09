@@ -1,7 +1,7 @@
 {
     "name": "trippilot-api",
     "version": "1.0.0",
-    "description": "TripPilot is a AI-powered travel advisor built with Google ADK, Gemini, Node.js, and React, demonstrating AI agents, tool calling, orchestration, and backend-independent architecture.",
+    "description": "TripPilot backend built with Node.js and Google ADK, providing AI agent orchestration, Gemini integration, tool calling, structured travel recommendations, and REST APIs.",
     "main": "dist/server.js",
     "scripts": {
       "build": "tsc",
@@ -9,7 +9,7 @@
       "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
     },
     "dependencies": {
-      "@google/genai": "^0.1.1",
+      "@google/genai": "^2.0.0",
       "cors": "^2.8.5",
       "dotenv": "^16.4.5",
       "express": "^4.19.2"
