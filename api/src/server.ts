@@ -1,9 +1,7 @@
+import './loadEnv';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import travelRoutes from './routes/travelRoutes';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,4 +32,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 app.listen(PORT, () => {
   console.log(`[Server] Travel Advisor API running on http://localhost:${PORT}`);
+  if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
+    console.warn('[Server] GEMINI_API_KEY is missing. Add it to api/.env before requesting travel advice.');
+  }
 });

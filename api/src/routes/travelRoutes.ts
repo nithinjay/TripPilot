@@ -42,11 +42,17 @@ router.post('/travel-advice', async (req: Request, res: Response) => {
     return res.status(200).json(advice);
   } catch (error: any) {
     console.error('[API Error]', error);
-    return res.status(500).json({
+    const message = typeof error?.message === 'string' ? error.message : '';
+    const missingKey = message.includes('GEMINI_API_KEY');
+    const overloaded = error?.status === 503 || /UNAVAILABLE|high demand/i.test(message);
+    return res.status(missingKey || overloaded ? 503 : 500).json({
       error: {
-        code: 'TRAVEL_ADVISOR_ERROR',
-        message: 'Unable to generate travel advice at this time.',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        code: missingKey ? 'MISSING_API_KEY' : (overloaded ? 'MODEL_UNAVAILABLE' : 'TRAVEL_ADVISOR_ERROR'),
+        message: missingKey
+          ? 'GEMINI_API_KEY is not set. Add your Gemini API key to api/.env and restart the API.'
+          : overloaded
+            ? 'Gemini is temporarily overloaded. Please try again in a moment.'
+            : (message || 'Unable to generate travel advice at this time.')
       }
     });
   }
